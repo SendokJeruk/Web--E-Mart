@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # E-Mart-Kosong
+=======
+# E-Mart
+>>>>>>> 877e36471c3e8951706ab58fc8d491a66562ac24
 
 This template should help get you started developing with Vue 3 in Vite.
 
