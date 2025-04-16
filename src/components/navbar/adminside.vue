@@ -1,53 +1,67 @@
 <template>
-    <div class="flex h-screen flex-col justify-between border-e border-gray-100 bg-[#7D0A0A]">
+  <div class="flex h-screen">
+    <div
+      v-if="isSidebarOpen"
+      @click="toggleSidebar"
+      class="fixed inset-0 z-30 bg-transparent lg:hidden transition-opacity duration-300 ease-in-out"
+    ></div>
+
+    <div
+      :class="[ 
+        'fixed z-40 lg:static flex h-full flex-col justify-between border-e border-gray-100 transition-transform duration-300 ease-in-out', 
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0', 
+        'w-64', 
+        'bg-[#7D0A0A]' 
+      ]"
+    >
       <div class="px-4 py-6">
         <ul class="mt-6 space-y-1">
           <li>
-            <a
-              href="#"
+            <router-link
+              to="/admin"
               :class="{
-                'bg-[#7D0A0A]': $route.path !== '/admin', 
+                'bg-[#7D0A0A]': $route.path !== '/admin',
                 'bg-[#5E0A0A]': $route.path === '/admin'
               }"
               class="block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-[#7D0A0A]"
             >
               Home
-            </a>
+            </router-link>
           </li>
-    
+
           <li>
-            <a
-              href="#"
+            <router-link
+              to="/manageUser"
               :class="{
-                'bg-[#7D0A0A]': $route.path !== '/admin', 
-                'bg-[#5E0A0A]': $route.path === '/admin'
+                'bg-[#7D0A0A]': $route.path !== '/manageUser',
+                'bg-[#5E0A0A]': $route.path === '/manageUser'
               }"
               class="block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-[#7D0A0A]"
             >
-              Home
-            </a>
+              Manage User
+            </router-link>
           </li>
-    
+
           <li>
-            <a
-              href="#"
+            <router-link
+              to="/dashboard"
               :class="{
-                'bg-[#7D0A0A]': $route.path !== '/admin', 
-                'bg-[#5E0A0A]': $route.path === '/admin'
+                'bg-[#7D0A0A]': $route.path !== '/dashboard',
+                'bg-[#5E0A0A]': $route.path === '/dashboard'
               }"
               class="block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-[#7D0A0A]"
             >
-              Home
-            </a>
+              Kembali
+            </router-link>
           </li>
         </ul>
       </div>
-    
+
       <div class="sticky inset-x-0 bottom-0 border-t border-gray-100 bg-[#7D0A0A]">
         <a href="#" class="flex items-center gap-2 p-4 hover:bg-BF3131">
           <img
             alt=""
-            src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+            src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&auto=format&fit=crop&w=1770&q=80"
             class="size-10 rounded-full object-cover"
           />
           <div>
@@ -59,26 +73,43 @@
         </a>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted } from 'vue';
-  import { useRoute } from 'vue-router'; 
-  import api from '@/plugins/axios';
-  
-  const userName = ref('')
-  const email = ref('')
-  const isLoggedIn = ref(false)
-  
-  onMounted(async () => {
-    try {
-      const response = await api.get('/profile')
-      isLoggedIn.value = true
-      userName.value = response.data.data.name      
-      email.value = response.data.data.email  
-    } catch (error) {
-      console.log('User not logged in')
-    }
-  })
-  </script>
-  
+
+    <!-- Main content area -->
+    <div class="flex-1 p-4 lg:p-8 bg-gray-100 w-full overflow-auto">
+      <!-- Mobile toggle button -->
+      <button
+        @click="toggleSidebar"
+        class="lg:hidden mb-4 inline-flex items-center rounded-md bg-[#7D0A0A] px-4 py-2 text-white hover:bg-[#A61D1D]"
+      >
+        ☰ Menu
+      </button>
+
+      <!-- Slot for main content -->
+      <router-view />
+      <slot/>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import api from '@/plugins/axios'
+
+const userName = ref('')
+const email = ref('')
+const isSidebarOpen = ref(false)
+
+onMounted(async () => {
+  try {
+    const response = await api.get('/profile')
+    userName.value = response.data.data.name
+    email.value = response.data.data.email
+  } catch (error) {
+    console.log('User not logged in')
+  }
+})
+
+function toggleSidebar() {
+  isSidebarOpen.value = !isSidebarOpen.value
+}
+</script>
