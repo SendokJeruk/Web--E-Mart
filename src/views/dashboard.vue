@@ -14,12 +14,35 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import navbar from '@/components/navbar/navbar.vue'
 import product from '@/components/card/product.vue'
 import api from "@/plugins/axios"
 
+const router = useRouter()
 const products = ref([])
 const searchQuery = ref("")
+
+const isLoggedIn = ref(false)
+const userName = ref('')
+const userRole = ref('')
+
+const checkRoleAndRedirect = async () => {
+  try {
+    const response = await api.get('/profile')
+    const role = response.data.data.nama_role
+
+    isLoggedIn.value = true
+    userName.value = response.data.data.name
+    userRole.value = role
+
+    if (role === 'admin') {
+      router.push('/admin')
+    }
+  } catch (error) {
+    router.push('/auth/login')
+  }
+}
 
 const fetchProducts = async () => {
   try {
@@ -30,7 +53,6 @@ const fetchProducts = async () => {
     })
 
     if (response.data && response.data.data && Array.isArray(response.data.data.data)) {
-      // Acak data setelah diambil
       products.value = response.data.data.data.sort(() => Math.random() - 0.5)
     } else {
       console.error("Expected an array but got:", typeof response.data.data)
@@ -40,7 +62,10 @@ const fetchProducts = async () => {
   }
 }
 
-onMounted(fetchProducts)
+onMounted(async () => {
+  await checkRoleAndRedirect()
+  await fetchProducts()
+})
 
 const filteredProducts = computed(() => {
   return products.value.filter((product) =>

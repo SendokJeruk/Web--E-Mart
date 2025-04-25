@@ -23,12 +23,28 @@
             <tr>
               <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
               <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
             <tr v-for="user in users" :key="user.id">
               <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ user.name }}</td>
               <td class="px-6 py-4 text-sm text-gray-500">{{ user.email }}</td>
+              <td class="px-6 py-4 text-sm text-red-600">
+                <button
+                  @click="deleteUser(user.id)"
+                  class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded mb-2 ml-3"
+                >
+                  Hapus
+                </button>
+
+                <router-link
+                  class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded mb-2 ml-3"
+                  :to="`/edituser/${user.id}`"
+                >
+                  Edit
+                </router-link>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -57,6 +73,20 @@ const getUsers = async () => {
   }
 };
 
+const deleteUser = async (id) => {
+  const konfirmasi = confirm('Yakin ingin menghapus user ini?');
+  if (!konfirmasi) return;
+
+  try {
+    await api.delete(`/manage-user/${id}`);
+    users.value = users.value.filter(user => user.id !== id);
+    alert('User berhasil dihapus.');
+  } catch (error) {
+    console.error('Gagal menghapus user:', error);
+    alert('Terjadi kesalahan saat menghapus user.');
+  }
+};
+
 onMounted(() => {
   getUsers();
 });
@@ -71,7 +101,6 @@ th, td {
   text-align: left;
 }
 
-/* Ini bakal tetap ngescroll kalau di mobile */
 @media (max-width: 768px) {
   table {
     width: 100%;

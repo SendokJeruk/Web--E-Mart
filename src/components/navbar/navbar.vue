@@ -2,14 +2,12 @@
   <header class="bg-white shadow-md">
     <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-20 items-center justify-between space-x-4">
-        <!-- Logo -->
         <div class="flex items-center m-3">
           <a href="#" aria-label="Home">
             <img src="@/assets/img/LOGO E-MART APP.png" alt="Logo" class="h-12 sm:h-16 w-auto object-contain" />
           </a>
         </div>
 
-        <!-- Search Bar -->
         <input
           v-model="search"
           id="search-query"
@@ -19,7 +17,6 @@
           type="text"
         />
 
-        <!-- Navbar -->
         <nav class="hidden md:flex items-center gap-6 text-sm">
           <div class="relative inline-flex">
             <span class="inline-flex divide-x divide-gray-300 overflow-hidden rounded border border-gray-300 bg-white shadow-sm">
@@ -30,7 +27,6 @@
                 Product
               </button>
 
-              <!-- Dropdown Toggle Button -->
               <button
                 type="button"
                 @click="toggleDropdown"
@@ -50,7 +46,6 @@
               </button>
             </span>
 
-            <!-- Dropdown Menu -->
             <div
               v-show="dropdownVisible"
               role="menu"
@@ -80,11 +75,11 @@
                 Stock
               </a>
               <router-link v-if="userRole === 'admin'" class="block px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-[#7D0A0A]" to="/admin">Admin</router-link>
+              <router-link v-if="userRole === 'seller'" class="block px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-[#7D0A0A]" to="/seller">Seller</router-link>
             </div>
           </div>
         </nav>
 
-        <!-- User Actions (Login/Register/Logout) -->
         <div class="flex items-center gap-4">
           <div v-if="!isLoggedIn" class="hidden sm:flex gap-2">
             <buttonred label="Login" to="/auth/login" />
@@ -109,17 +104,17 @@
       </div>
     </div>
 
-    <!-- Mobile Sidebar Menu -->
     <div v-if="showSidebar" class="md:hidden bg-white border-t shadow-md">
       <nav class="flex flex-col p-4 gap-3 text-sm">
         <a href="#" class="block bg-white shadow rounded-lg px-4 py-2 text-gray-700 hover:[#7D0A0A] hover:shadow-md transition">Home</a>
         <a href="#" class="block bg-white shadow rounded-lg px-4 py-2 text-gray-700 hover:[#7D0A0A] hover:shadow-md transition">Keranjang</a>
         <a href="#" class="block bg-white shadow rounded-lg px-4 py-2 text-gray-700 hover:[#7D0A0A] hover:shadow-md transition">History</a>
         <a href="#" class="block bg-white shadow rounded-lg px-4 py-2 text-gray-700 hover:[#7D0A0A] hover:shadow-md transition">Setting</a>
-        <a v-if="userRole === 'admin'" href="#" class="block bg-white shadow rounded-lg px-4 py-2 text-gray-700 hover:[#7D0A0A] hover:shadow-md transition">Admin</a>
+        <router-link v-if="userRole === 'admin'" to="/admin" class="block bg-white shadow rounded-lg px-4 py-2 text-gray-700 hover:text-[#7D0A0A] hover:shadow-md transition">Admin</router-link>
+        <router-link v-if="userRole === 'seller'" to="/seller" class="block bg-white shadow rounded-lg px-4 py-2 text-gray-700 hover:text-[#7D0A0A] hover:shadow-md transition">Seller</router-link>
 
         <div v-if="!isLoggedIn" class="pt-4 space-y-2">
-          <buttonred label="Login" to="/auth/login" />
+          <buttonred class="mr-3" label="Login" to="/auth/login" />
           <buttonred label="Register" to="/auth/register" />
         </div>
 
@@ -149,14 +144,14 @@ const isLoggedIn = ref(false)
 const userName = ref('')
 const userRole = ref('')
 const showSidebar = ref(false)
-const dropdownVisible = ref(false) // Status dropdown menu
+const dropdownVisible = ref(false)
 
 const toggleSidebar = () => {
   showSidebar.value = !showSidebar.value
 }
 
 const toggleDropdown = () => {
-  dropdownVisible.value = !dropdownVisible.value // Toggle dropdown
+  dropdownVisible.value = !dropdownVisible.value 
 }
 
 const logout = async () => {

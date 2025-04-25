@@ -69,7 +69,7 @@ export default {
         email: "",
         no_telp: "",
         password: "",
-        role_id: 1,
+        role_id: 3,
       },
       images: [
         "https://placehold.co/400x500",

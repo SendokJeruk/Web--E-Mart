@@ -44,16 +44,37 @@
 
           <li>
             <router-link
-              to="/dashboard"
+              to="/role"
               :class="{
-                'bg-[#7D0A0A]': $route.path !== '/dashboard',
-                'bg-[#5E0A0A]': $route.path === '/dashboard'
+                'bg-[#7D0A0A]': $route.path !== '/role',
+                'bg-[#5E0A0A]': $route.path === '/role'
               }"
               class="block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-[#7D0A0A]"
             >
-              Kembali
+              Manage Role
             </router-link>
           </li>
+
+          <li>
+            <router-link
+              to="/kategori"
+              :class="{
+                'bg-[#7D0A0A]': $route.path !== '/kategori',
+                'bg-[#5E0A0A]': $route.path === '/kategori'
+              }"
+              class="block rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-[#7D0A0A]"
+            >
+              Manage kategori
+            </router-link>
+          </li>
+
+          <button
+            @click="logout"
+            class="w-full text-left rounded-lg px-4 py-2 text-sm font-medium text-white hover:bg-[#A61D1D]"
+          >
+            Logout
+          </button>
+
         </ul>
       </div>
 
@@ -74,9 +95,7 @@
       </div>
     </div>
 
-    <!-- Main content area -->
     <div class="flex-1 p-4 lg:p-8 bg-gray-100 w-full overflow-auto">
-      <!-- Mobile toggle button -->
       <button
         @click="toggleSidebar"
         class="lg:hidden mb-4 inline-flex items-center rounded-md bg-[#7D0A0A] px-4 py-2 text-white hover:bg-[#A61D1D]"
@@ -84,7 +103,6 @@
         ☰ Menu
       </button>
 
-      <!-- Slot for main content -->
       <router-view />
       <slot/>
     </div>
@@ -94,10 +112,28 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '@/plugins/axios'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const userName = ref('')
 const email = ref('')
 const isSidebarOpen = ref(false)
+
+const logout = async () => {
+  const confirmed = window.confirm("Are you sure you want to log out?")
+  if (!confirmed) return
+
+  try {
+    await api.post('/auth/logout')
+    localStorage.removeItem("token")
+    router.push('/auth/login')
+    alert('Logged out successfully!')
+  } catch (error) {
+    console.error('Logout failed:', error)
+    alert('Logout failed, please try again.')
+  }
+}
+
 
 onMounted(async () => {
   try {

@@ -67,7 +67,7 @@
           </select>
         </div>
 
-        <!-- <div class="mb-4">
+        <div class="mb-4">
           <label for="foto_profil" class="block mb-1">Foto Profil</label>
           <input
             id="foto_profil"
@@ -77,7 +77,7 @@
             @change="handleFileUpload"
             class="w-full border px-3 py-2 rounded"
           />
-        </div> -->
+        </div>
 
         <button
           type="submit"
@@ -94,14 +94,16 @@
 import { ref, onMounted } from 'vue'
 import api from '@/plugins/axios'
 import adminside from '@/components/navbar/adminside.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const form = ref({
   name: '',
   email: '',
   password: '',
   no_telp: '',
   role_id: '',
-  // foto_profil: null,
+  foto_profil: null,
 })
 
 const roleIds = ref([])
@@ -118,16 +120,16 @@ const fetchRoles = async () => {
   }
 }
 
-// const handleFileUpload = (event) => {
-//   const file = event.target.files[0]
-//   if (file) {
-//     form.value.foto_profil = file
-//     console.log('File dipilih:', file)
-//   } else {
-//     form.value.foto_profil = null
-//     console.warn('Tidak ada file yang dipilih')
-//   }
-// }
+const handleFileUpload = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    form.value.foto_profil = file
+    console.log('File dipilih:', file)
+  } else {
+    form.value.foto_profil = null
+    console.warn('Tidak ada file yang dipilih')
+  }
+}
 
 const submitForm = async () => {
   try {
@@ -138,11 +140,9 @@ const submitForm = async () => {
     formData.append('no_telp', form.value.no_telp)
     formData.append('role_id', form.value.role_id)
 
-    // Jika kamu ingin menggunakan foto_profil, aktifkan kembali kode ini
-    // if (form.value.foto_profil) {
-    //   console.log('Mengirim file:', form.value.foto_profil)
-    //   formData.append('foto_profil', form.value.foto_profil)
-    // }
+    if (form.value.foto_profil) {
+      formData.append('foto_profil', form.value.foto_profil)
+    }
 
     const response = await api.post('/manage-user', formData, {
       headers: {
@@ -152,6 +152,8 @@ const submitForm = async () => {
 
     alert('User berhasil ditambahkan!')
     console.log('Response:', response.data)
+
+    router.push('/manageUser') 
   } catch (error) {
     console.error('Gagal submit form:', error)
     console.error('Detail error:', error.response?.data || error)

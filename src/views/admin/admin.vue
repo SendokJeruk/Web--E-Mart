@@ -8,8 +8,8 @@
           <p class="text-3xl font-bold text-red-600">{{ users.length }}</p>
         </div>
         <div class="bg-white rounded-2xl shadow p-6 text-center">
-          <h2 class="text-xl font-semibold mb-2">Total Postingan</h2>
-          <p class="text-3xl font-bold text-red-600">587</p>
+          <h2 class="text-xl font-semibold mb-2">Total Seluruh Product</h2>
+          <p class="text-3xl font-bold text-red-600">{{ Product.length }}</p>
         </div>
         <div class="bg-white rounded-2xl shadow p-6 text-center">
           <h2 class="text-xl font-semibold mb-2">Total Komentar</h2>
@@ -26,6 +26,7 @@ import api from '@/plugins/axios'
 import adminside from '@/components/navbar/adminside.vue'
 
 const users = ref([])
+const Product = ref([])
 
 const getUsers = async () => {
   try {
@@ -40,7 +41,21 @@ const getUsers = async () => {
   }
 }
 
+const getProducts = async ()=> {
+  try {
+    const response = await api.get('/product')
+    if (Array.isArray(response.data.data.data)) {
+      Product.value = response.data.data.data
+    } else {
+      console.error("Data Produk Tidak Berupa Array:", response.data.data.data)
+    }
+  } catch (error) {
+    console.error('Error Fetching Products:', error)
+  }
+}
+
 onMounted(() => {
   getUsers()
+  getProducts()
 })
 </script>
