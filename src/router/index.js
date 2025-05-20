@@ -19,6 +19,19 @@ import { createRouter, createWebHistory } from "vue-router";
 import Createkategoripr from "@/views/seller/managekategori/createkategoripr.vue";
 import Edituser from "@/views/admin/manage-user/edituser.vue";
 import Editrole from "@/views/admin/managerole/editrole.vue";
+import Produk from "@/views/produk/produk.vue";
+import Fotoproduct from "@/views/seller/manageproduct/fotoproduct.vue";
+import Editproduct from "@/views/seller/manageproduct/editproduct.vue";
+import Managefotopr from "@/views/seller/manageproduct/managefotopr.vue";
+import Editfotopr from "@/views/seller/manageproduct/editfotopr.vue";
+import Managetoko from "@/views/seller/managetoko/managetoko.vue";
+import Createtoko from "@/views/seller/managetoko/createtoko.vue";
+import EditToko from "@/views/seller/managetoko/editToko.vue";
+import Editcategorypr from "@/views/seller/managekategori/editcategorypr.vue";
+import Checkout from "@/views/checkout/checkout.vue";
+import Profil from "@/views/profil/profil.vue";
+import Editprofil from "@/views/profil/editprofil.vue";
+import Alamat from "@/views/profil/alamat.vue";
 
 const routes = [
     {
@@ -83,7 +96,7 @@ const routes = [
     },
     {
         path: '/editkategori/:id',
-        name: 'editkategori/:id',
+        name: 'editkategori',
         component: Editkategori
     },
     {
@@ -112,14 +125,79 @@ const routes = [
         component: Createkategoripr
     },
     {
+        path: '/editkategoriproduk/:id',
+        name: 'editkategoriproduk',
+        component: Editcategorypr
+    },
+    {
         path: '/edituser/:id',
-        name: 'edituser/:id',
+        name: 'edituser',
         component: Edituser
     },
     {
         path: '/editrole/:id',
-        name: 'editrole/:id',
+        name: 'editrole',
         component: Editrole
+    },
+    {
+        path: '/produk/:id',
+        name: 'produk',
+        component: Produk
+    },
+    {
+        path: '/fotoproduct',
+        name: 'fotoproduct',
+        component: Fotoproduct
+    },
+    {
+        path: '/editproduk/:id',
+        name: 'editproduk',
+        component: Editproduct
+    },
+    {
+        path: '/manageFotoproduct',
+        name: 'manageFotoproduct',
+        component: Managefotopr
+    },
+    {
+        path: '/editfotoproduct/:id',
+        name: 'editfotoproduct',
+        component: Editfotopr
+    },
+    {
+        path: '/managetoko',
+        name: 'managetoko',
+        component: Managetoko
+    },
+    {
+        path: '/createtoko',
+        name: 'createtoko',
+        component: Createtoko
+    },
+    {
+        path: '/editToko/:id',
+        name: 'editToko',
+        component: EditToko
+    },
+    {
+        path: '/checkout',
+        name: 'checkout',
+        component: Checkout
+    },
+    {
+        path: '/profil',
+        name: 'profil',
+        component: Profil
+    },
+    {
+        path: '/editprofil/:id',
+        name: 'editprofil',
+        component: Editprofil
+    },
+    {
+        path: '/alamat',
+        name: 'alamat',
+        component: Alamat
     }
 ]
 

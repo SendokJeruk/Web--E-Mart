@@ -39,9 +39,9 @@
     }
   }
   
-  onMounted(() => {
-    getProfile()
-    getProducts()
+  onMounted(async () => {
+    await getProfile()
+    await getProducts()
   })
   </script>
   

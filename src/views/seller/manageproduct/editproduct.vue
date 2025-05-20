@@ -1,6 +1,6 @@
 <template>
-    <sellerside>
-      <div class="max-w-md mx-auto p-4 bg-white shadow rounded">
+  <Sellerside>
+    <div class="max-w-md mx-auto p-4 bg-white shadow rounded overflow-x-hidden">
         <h2 class="text-xl font-bold mb-4">Form Tambah Produk</h2>
         <form @submit.prevent="submitForm">
           <div class="mb-4">
@@ -49,7 +49,6 @@
             v-model="form.berat"
             type="number"
             class="w-full border px-3 py-2 rounded"
-            required
             />
           </div>
 
@@ -73,9 +72,11 @@
             >
               <div class="flex items-center justify-center gap-4">
                 <span class="font-medium">Upload Foto Produk</span>
-                <div v-if="selectedFileName" class="text-sm text-gray-500">
-                  {{ selectedFileName }}
-                </div>
+                <div v-if="selectedFileName" class="text-sm text-gray-500 truncate w-full max-w-xs">
+                    {{ selectedFileName }}
+                    </div>
+
+
 
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -110,91 +111,92 @@
           </button>
         </form>
       </div>
-    </sellerside>
-  </template>
+  </Sellerside>
+</template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import api from '@/plugins/axios'
-import sellerside from '@/components/navbar/sellerside.vue'
+import Sellerside from '@/components/navbar/sellerside.vue'
 
-const selectedFileName = ref('')
+const route = useRoute()
+const router = useRouter()
 
-const user = ref({})
 const form = ref({
   nama_product: '',
   deskripsi: '',
   harga: '',
   stock: '',
-  foto_cover: null,
-  status: '',
   berat: '',
-  user_id: '',
+  status: '',
+  foto_cover: null,  
 })
 
+const isLoading = ref(true)
+const selectedFileName = ref(null);
+
 const handleFileUpload = (event) => {
-  const file = event.target.files[0]
+  const file = event.target.files[0];
   if (file) {
-    form.value.foto_cover = file
-    selectedFileName.value = file.name 
-  } else {
-    form.value.foto_cover = null
-    selectedFileName.value = ''
+    selectedFileName.value = file.name;
+    form.value.foto_cover = file;  
   }
-}
+};
 
-const getProfile = async () => {
-    try {
-      const response = await api.get('/profile')
-      user.value = response.data.data 
-      form.value.user_id = user.value.id
-    } catch (error) {
-      console.error('Gagal mengambil profil:', error)
-    }
-  }
-
-  const submitForm = async () => {
-    if (!form.value.user_id) {
-  alert('User belum dikenali, silakan tunggu beberapa saat...');
-  return;
-}
-
+const fetchProduct = async () => {
   try {
-    const formData = new FormData()
-    formData.append('nama_product', form.value.nama_product)
-    formData.append('deskripsi', form.value.deskripsi)
-    formData.append('harga', form.value.harga)
-    formData.append('stock', form.value.stock)
-    formData.append('foto_cover', form.value.foto_cover)
-    formData.append('status_produk', form.value.status) 
-    formData.append('berat', form.value.berat)
-    formData.append('user_id', form.value.user_id) 
+    const response = await api.get(`/product?id=${route.params.id}`);
+    const product = response.data.data.data[0];
+    form.value.nama_product = product.nama_product;
+    form.value.deskripsi = product.deskripsi;
+    form.value.harga = product.harga;
+    form.value.stock = product.stock;
+    form.value.berat = product.berat;
+    form.value.status = product.status_produk;
+    selectedFileName.value = product.foto_cover || 'Tidak ada file';
+  } catch (error) {
+    console.error('Gagal mengambil data produk:', error);
+    alert('Gagal mengambil data produk.');
+  } finally {
+    isLoading.value = false;
+  }
+};
 
-    const response = await api.post('/product', formData, {
+const submitForm = async () => {
+  try {
+    const formData = new FormData();
+
+    formData.append('nama_product', form.value.nama_product);
+    formData.append('deskripsi', form.value.deskripsi);
+    formData.append('harga', form.value.harga);
+    formData.append('stock', form.value.stock);
+    formData.append('berat', form.value.berat);
+    formData.append('status_produk', form.value.status);
+    if (form.value.foto_cover) {
+      formData.append('foto_cover', form.value.foto_cover);  
+    }
+
+
+    await api.post(`/product/${route.params.id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    })
+    });
 
-    alert('Produk berhasil ditambahkan!')
-    form.value = {
-      nama_product: '',
-      deskripsi: '',
-      harga: '',
-      stock: '',
-      foto_cover: null,
-      status: '',
-      berat: '',
-      user_id: '',
-    }
-
+    alert('Produk berhasil diperbarui!');
+    router.push('/manageproduk');  
   } catch (error) {
-    console.error('Gagal submit form:', error.response?.data)
-    alert(error.response?.data?.message || 'Gagal menambahkan produk.')
+    console.error('Gagal submit form:', error);
+    alert(error.response?.data?.message || 'Gagal mengubah produk.');
   }
-}
+};
 
 onMounted(() => {
-    getProfile()
+  fetchProduct()  
 })
 </script>
+
+<style>
+
+</style>

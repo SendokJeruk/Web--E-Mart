@@ -68,16 +68,39 @@
           </div>
   
           <div class="mb-4">
-            <label for="foto_profil" class="block mb-1">Foto Profil</label>
+          <label for="foto_profil" class="block rounded border border-gray-300 p-4 text-gray-900 shadow-sm sm:p-6 cursor-pointer">
+            <div class="flex items-center justify-center gap-4">
+              <span class="font-medium">Upload Foto Profil</span>
+              <div v-if="selectedFileName" class="text-sm text-gray-500">
+                {{ selectedFileName }}
+              </div>
+
+          
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"
+                />
+              </svg>
+            </div>
             <input
               id="foto_profil"
               name="foto_profil"
               type="file"
               accept="image/*"
               @change="handleFileUpload"
-              class="w-full border px-3 py-2 rounded"
+              class="sr-only"
             />
-          </div>
+          </label>
+        </div>
   
           <button
             type="submit"
@@ -108,6 +131,10 @@ const form = ref({
   foto_profil: null,
 })
 
+const isLoading = ref(true)
+
+const selectedFileName = ref(null);
+
 const roleIds = ref([])
 
 const fetchRoles = async () => {
@@ -121,6 +148,31 @@ const fetchRoles = async () => {
     console.error('Gagal mengambil data role:', error)
   }
 }
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    selectedFileName.value = file.name;
+    form.value.foto_profil = file; 
+  }
+};
+
+const fetchUser = async () => {
+  try {
+    const response = await api.get(`/manage-user?id=${route.params.id}`);
+    const user = response.data.data.data[0];
+    form.value.name = user.name;
+    form.value.email = user.email;
+    form.value.password = user.password;
+    form.value.no_telp = user.no_telp;
+    form.value.role_id = user.role_id;
+  } catch (error) {
+    console.error('Gagal mengambil data user:', error);
+    alert('Gagal mengambil data user.');
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const submitForm = async () => {
   try {
@@ -151,5 +203,6 @@ const submitForm = async () => {
 
 onMounted(() => {
   fetchRoles()
+  fetchUser()
 })
 </script>

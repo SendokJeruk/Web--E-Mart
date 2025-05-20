@@ -37,11 +37,12 @@
           Rp.{{ product.harga }}
         </p>
         <form class="mt-4 flex gap-2">
-          <button
+          <router-link
+            :to="`/produk/${product.id}`"
             class="flex-1 rounded-sm bg-[#7D0A0A] px-4 py-2 text-sm font-medium text-white transition hover:scale-105 font"
           >
-            Add to Cart
-          </button>
+            Lihat Produk
+          </router-link>
         </form>
       </div>
     </a>

@@ -42,7 +42,7 @@
             </router-link>
           </li>
 
-          <li>
+          <!-- <li>
             <router-link
               to="/role"
               :class="{
@@ -53,7 +53,7 @@
             >
               Manage Role
             </router-link>
-          </li>
+          </li> -->
 
           <li>
             <router-link

@@ -24,7 +24,7 @@
                 type="button"
                 class="px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900 focus:relative"
               >
-                Product
+                Home
               </button>
 
               <button
@@ -51,13 +51,13 @@
               role="menu"
               class="absolute end-0 top-12 z-auto w-56 overflow-hidden rounded border border-gray-300 bg-white shadow-sm"
             >
-              <a
-                href="#"
+              <router-link
+                to="/profil"
                 class="block px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900"
                 role="menuitem"
               >
-                Storefront
-              </a>
+                Profil
+              </router-link>
 
               <a
                 href="#"

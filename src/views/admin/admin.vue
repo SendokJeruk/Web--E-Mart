@@ -24,9 +24,16 @@
 import { ref, onMounted } from 'vue'
 import api from '@/plugins/axios'
 import adminside from '@/components/navbar/adminside.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const users = ref([])
 const Product = ref([])
+
+const isLoggedIn = ref(false)
+const userName = ref('')
+const userRole = ref('')
 
 const getUsers = async () => {
   try {
@@ -54,7 +61,25 @@ const getProducts = async ()=> {
   }
 }
 
-onMounted(() => {
+const checkRoleAndRedirect = async () => {
+  try {
+    const response = await api.get('/profile')
+    const role = response.data.data.nama_role
+
+    isLoggedIn.value = true
+    userName.value = response.data.data.name
+    userRole.value = role
+
+    if (role === 'seller' || role === 'user') {
+  router.push('/dashboard')
+}
+  } catch (error) {
+    router.push('/auth/login')
+  }
+}
+
+onMounted(async () => {
+  await checkRoleAndRedirect()
   getUsers()
   getProducts()
 })

@@ -1,5 +1,11 @@
 <template>
   <adminside>
+    <div v-if="isMobile" class="text-center mt-10">
+      <h2 class="text-xl font-semibold text-red-600">
+        Website ini tidak bisa diakses dari perangkat mobile.
+      </h2>
+    </div>
+
     <div class="max-w-md mx-auto p-4 bg-white shadow rounded">
       <h2 class="text-xl font-bold mb-4">Form Tambah User</h2>
       <form @submit.prevent="submitForm">
@@ -68,16 +74,40 @@
         </div>
 
         <div class="mb-4">
-          <label for="foto_profil" class="block mb-1">Foto Profil</label>
-          <input
-            id="foto_profil"
-            name="foto_profil"
-            type="file"
-            accept="image/*"
-            @change="handleFileUpload"
-            class="w-full border px-3 py-2 rounded"
-          />
+          <label for="foto_profil" class="block rounded border border-gray-300 p-4 text-gray-900 shadow-sm sm:p-6 cursor-pointer">
+            <div class="flex items-center justify-center gap-4">
+              <span class="font-medium">Upload Foto Profil</span>
+              <div v-if="selectedFileName" class="text-sm text-gray-500">
+                {{ selectedFileName }}
+              </div>
+
+          
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7.5 7.5h-.75A2.25 2.25 0 0 0 4.5 9.75v7.5a2.25 2.25 0 0 0 2.25 2.25h7.5a2.25 2.25 0 0 0 2.25-2.25v-7.5a2.25 2.25 0 0 0-2.25-2.25h-.75m0-3-3-3m0 0-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 0 1 2.25 2.25v7.5a2.25 2.25 0 0 1-2.25 2.25h-7.5a2.25 2.25 0 0 1-2.25-2.25v-.75"
+                />
+              </svg>
+            </div>
+            <input
+              id="foto_profil"
+              name="foto_profil"
+              type="file"
+              accept="image/*"
+              @change="handleFileUpload"
+              class="sr-only"
+            />
+          </label>
         </div>
+
 
         <button
           type="submit"
@@ -106,6 +136,10 @@ const form = ref({
   foto_profil: null,
 })
 
+const selectedFileName = ref('')
+
+const isMobile = ref(false)
+
 const roleIds = ref([])
 
 const fetchRoles = async () => {
@@ -124,7 +158,7 @@ const handleFileUpload = (event) => {
   const file = event.target.files[0]
   if (file) {
     form.value.foto_profil = file
-    console.log('File dipilih:', file)
+    selectedFileName.value = file.name
   } else {
     form.value.foto_profil = null
     console.warn('Tidak ada file yang dipilih')
@@ -162,4 +196,9 @@ const submitForm = async () => {
 }
 
 onMounted(fetchRoles)
+
+onMounted(() => {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera
+  isMobile.value = /android|iphone|ipad|iPod|mobile/i.test(userAgent)
+})
 </script>

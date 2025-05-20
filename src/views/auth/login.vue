@@ -2,14 +2,12 @@
   <div class="min-h-screen flex items-center justify-center bg-[#EEEEEE]">
     <div class="flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden w-[95%] max-w-4xl">
       
-      <!-- Carousel -->
       <div v-if="isDesktop" class="relative w-full md:w-1/2 bg-[#f5f5f5] flex justify-center items-center p-4">
         <div class="w-11/12">
           <img :src="images[currentImage]" class="w-full rounded-lg" alt="Carousel Image" />
         </div>
       </div>
 
-      <!-- Login Form -->
       <div class="w-full md:w-1/2 bg-[#7D0A0A] text-white p-10 text-center">
         <h2 class="text-2xl font-righteous mb-6">Login</h2>
         <form @submit.prevent="loginUser" class="space-y-4">
